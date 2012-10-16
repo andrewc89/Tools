@@ -46,8 +46,8 @@ namespace Tools.Strings.Parse
         /// </summary>
         /// <param name="Input">input string</param>
         /// <param name="Index">starting index, default is 0</param>
-        /// <returns>index of next upper case character, -1 of none found</returns>
-        private static int IndexOfNextUpperChar (this string Input, int Index = 0)
+        /// <returns>index of next upper case character, -1 if none found</returns>
+       public static int IndexOfNextUpperChar (this string Input, int Index = 0)
         {
             var Chars = Input.ToCharArray();
             while (Index < Input.Length)
