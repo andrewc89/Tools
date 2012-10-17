@@ -82,7 +82,7 @@ namespace Tools.HTML.Form.Builder.Element
         {
             var String = new StringBuilder();
 
-            String.AppendFormat("<select name='{0}' class='{1}'>\n", this.Name, string.Join(" ", this.Classes));
+            String.AppendFormat("<select name='{0}.ID' class='{1}'>\n", this.Name, string.Join(" ", this.Classes));
             String.Append("<option value=''>Select...</option>");
 
             foreach (var Option in this.Options)

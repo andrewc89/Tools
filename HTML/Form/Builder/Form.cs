@@ -78,6 +78,18 @@ namespace Tools.HTML.Form.Builder
             return this;
         }
 
+        public Form AddSelect (string Name, long ID = 0, params string[] Classes)
+        {
+            this.Elements.Add(new Select(Name, ID, Classes));
+            return this;
+        }
+
+        public Form AddInput (string Type, string Name, string Value = "", params string[] Classes)
+        {
+            this.Elements.Add(new Input(Type, Name, Value, Classes));
+            return this;
+        }
+
         /// <summary>
         /// allows for changing the Form's Action while chaining
         /// </summary>
@@ -185,7 +197,10 @@ namespace Tools.HTML.Form.Builder
 
             foreach (var Element in Elements)
             {
-                Form.Append(Label.Get(Element.Name, Element.Name));
+                if (!(Element.GetType().Equals(typeof(Input)) && ((Input)Element).Type.Equals("hidden")))
+                {
+                    Form.Append(Label.Get(Element.Name, Element.Name));
+                }
                 Form.Append(Element.ToHtml());
             }
 

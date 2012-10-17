@@ -53,8 +53,12 @@ namespace Tools.HTML.Form.Builder.Element
         {
             if (this.Type.Equals("checkbox"))
             {
-                string Checked = (this.Value.ToLower().Equals("true")) ? "checked" : "";
-                return String.Format("<input type='{0}' name='{1}' checked='{2}' class='{3}' /><br /><br />\n\n", this.Type, this.Name, Checked, string.Join(" ", Classes));
+                string Checked = (this.Value.ToLower().Equals("true")) ? "checked='checked'" : "";
+                return String.Format("<input type='{0}' name='{1}' {2} class='{3}' /><br /><br />\n\n", this.Type, this.Name, Checked, string.Join(" ", Classes));
+            }
+            else if (this.Type.Equals("hidden"))
+            {
+                return String.Format("<input type='{0}' name='{1}' value='{2}' class='{3}' />\n\n", this.Type, this.Name, this.Value, string.Join(" ", Classes));
             }
             else
             {
