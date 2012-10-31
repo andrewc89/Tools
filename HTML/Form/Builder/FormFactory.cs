@@ -1,16 +1,16 @@
 ﻿
-namespace Tools.HTML.Form.Builder
+namespace Admin.Models.Form.Builder
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
-    using Tools.HTML.Form.Builder.Element;
+    using Admin.Models.Form.Builder.Element;
 
     /// <summary>
     /// creates a new, constructed Form.
-    /// all objects inheriting from interface type must have
-    /// public long ID field
+    /// all objects inheriting from interface type must have a
+    /// public long ID field and a public static T Load(long ID) method
     /// </summary>
     public static class FormFactory
     {
@@ -35,7 +35,7 @@ namespace Tools.HTML.Form.Builder
         }
 
         /// <summary>
-        /// creates form elements using refections and fills form with values
+        /// creates form elements using refection and fills form with values
         /// of passed in object for editing
         /// </summary>
         /// <typeparam name="T">object to build form for</typeparam>

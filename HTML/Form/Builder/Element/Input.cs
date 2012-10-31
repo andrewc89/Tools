@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Tools.HTML.Form.Builder.Element
+namespace Admin.Models.Form.Builder.Element
 {
     /// <summary>
     /// input element
@@ -54,7 +54,7 @@ namespace Tools.HTML.Form.Builder.Element
             if (this.Type.Equals("checkbox"))
             {
                 string Checked = (this.Value.ToLower().Equals("true")) ? "checked='checked'" : "";
-                return String.Format("<input type='{0}' name='{1}' {2} class='{3}' /><br /><br />\n\n", this.Type, this.Name, Checked, string.Join(" ", Classes));
+                return String.Format("<input type='{0}' name='{1}' {2} class='{3}' /><br /><br />\n\n", this.Type, this.Name, Checked, string.Join(" ", Classes.RemoveAll(x => x.Equals("required"))));
             }
             else if (this.Type.Equals("hidden"))
             {

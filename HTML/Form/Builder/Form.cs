@@ -3,12 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.HTML.Form.Builder.Element;
+using Admin.Models.Form.Builder.Element;
 using System.Reflection;
 using System.Collections;
-using Tools.ViewModels.General;
+using Objects.ViewModels.General;
 
-namespace Tools.HTML.Form.Builder
+namespace Admin.Models.Form.Builder
 {
     /// <summary>
     /// constructs a form element from a given object.
@@ -75,18 +75,6 @@ namespace Tools.HTML.Form.Builder
                 var Element = (Select)this.Elements.Find(x => x.Name.Equals(ElementName));
                 Element.AddOptions(Options);
             }
-            return this;
-        }
-
-        public Form AddSelect (string Name, long ID = 0, params string[] Classes)
-        {
-            this.Elements.Add(new Select(Name, ID, Classes));
-            return this;
-        }
-
-        public Form AddInput (string Type, string Name, string Value = "", params string[] Classes)
-        {
-            this.Elements.Add(new Input(Type, Name, Value, Classes));
             return this;
         }
 
@@ -172,12 +160,100 @@ namespace Tools.HTML.Form.Builder
         /// </summary>
         /// <param name="Elements">Element names to match</param>
         /// <returns>this</returns>
-        public Form AreNotRequired (List<string> Elements)
+        public Form AreNotRequired (params string[] Elements)
         {
             foreach (var ElementName in Elements)
             {
                 IsNotRequired(ElementName);
             }
+            return this;
+        }
+
+        /// <summary>
+        /// sets the value of an input specified by name
+        /// </summary>
+        /// <param name="Element">element name</param>
+        /// <param name="Value">element value</param>
+        /// <returns>this</returns>
+        public Form SetValue (string Element, string Value)
+        {
+            var Input = (Input)this.Elements.Find(x => x.Name.Equals(Element));
+            Input.Value = Value;
+            return this;
+        }
+
+        /// <summary>
+        /// sets the value of a select element by id
+        /// </summary>
+        /// <param name="Element">element name</param>
+        /// <param name="Value">element value</param>
+        /// <returns>this</returns>
+        public Form SetValue (string Element, long Value)
+        {
+            var Select = (Select)this.Elements.Find(x => x.Name.Equals(Element));
+            Select.ID = Value;
+            return this;
+        }
+
+        /// <summary>
+        /// removes an element specified by name
+        /// </summary>
+        /// <param name="Element">element name</param>
+        /// <returns>this</returns>
+        public Form RemoveElement (string Element)
+        {
+            this.Elements.RemoveAll(x => x.Name.Equals(Element));
+            return this;
+        }
+
+        /// <summary>
+        /// removes multiple elements specified by name
+        /// </summary>
+        /// <param name="Elements">element name</param>
+        /// <returns>this</returns>
+        public Form RemoveElements (params string[] Elements)
+        {
+            foreach (var Element in Elements)
+            {
+                RemoveElement(Element);
+            }
+            return this;
+        }
+
+        /// <summary>
+        /// adds an input element to the form
+        /// </summary>
+        /// <param name="Type">property type</param>
+        /// <param name="Name">property name</param>
+        /// <param name="Value">property value (defaults to empty string)</param>
+        /// <returns>this</returns>
+        public Form AddInput (Type Type, string Name, string Value = "")
+        {
+            new FormBuilder(this).AddInput(Type, Name, Value);
+            return this;
+        }
+
+        /// <summary>
+        /// adds a select element to the form
+        /// </summary>
+        /// <param name="Name">property name</param>
+        /// <param name="ID">id of selected value (defaults to 0)</param>
+        /// <returns>this</returns>
+        public Form AddSelect (string Name, long ID = 0)
+        {
+            new FormBuilder(this).AddSelect(Name, ID);
+            return this;
+        }
+
+        /// <summary>
+        /// adds a textarea element to the form
+        /// </summary>
+        /// <param name="Name">property name</param>
+        /// <param name="Value">property value (defaults to empty string)</param>
+        /// <returns>this</returns>
+        public Form AddTextArea (string Name, string Value = "")
+        {
+            new FormBuilder(this).AddTextArea(Name, Value);
             return this;
         }
 
@@ -193,7 +269,7 @@ namespace Tools.HTML.Form.Builder
         {
             var Form = new StringBuilder();
 
-            Form.AppendFormat("<form id='{0}-form' action='{1}' method='{2}'>\n\n", this.ClassType.Name.ToLower(), this.Action, this.Method);
+            Form.AppendFormat("<form id='{0}-form' action='' method='{1}'>\n\n", this.ClassType.Name.ToLower(), this.Method);
 
             foreach (var Element in Elements)
             {

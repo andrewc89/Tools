@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using Tools.Strings.Parse;
 
-namespace Tools.HTML.Form.Builder.Element
+namespace Admin.Models.Form.Builder.Element
 {
     /// <summary>
     /// label element

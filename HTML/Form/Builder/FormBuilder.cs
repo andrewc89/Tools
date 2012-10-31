@@ -1,12 +1,12 @@
 ﻿
-namespace Tools.HTML.Form.Builder
+namespace Admin.Models.Form.Builder
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
     using System.Reflection;
-    using Tools.HTML.Form.Builder.Element;
+    using Admin.Models.Form.Builder.Element;
 
     /// <summary>
     /// builds out the actual form via reflection
@@ -49,7 +49,10 @@ namespace Tools.HTML.Form.Builder
                     }
                     else
                     {
-                        AddInput(PropertyType, Property.Name);
+                        if (Property.GetSetMethod() != null)
+                        {
+                            AddInput(PropertyType, Property.Name);
+                        }
                     }
                 }
             }
@@ -73,13 +76,20 @@ namespace Tools.HTML.Form.Builder
                     if (PropertyType.GetInterfaces().Contains(this.Form.InterfaceType))
                     {
                         var PropertyValue = Property.GetValue(obj, null);
-                        var ID = (long)PropertyValue.GetType().GetProperty("ID").GetValue(PropertyValue, null);
+                        long ID = 0;
+                        if (PropertyValue != null)
+                        {
+                            ID = (long)PropertyValue.GetType().GetProperty("ID").GetValue(PropertyValue, null);
+                        }
                         AddSelect(Property.Name, ID);
                     }
                     else
                     {
-                        string Value = Property.GetValue(obj, null).ToString();
-                        AddInput(PropertyType, Property.Name, Value);
+                        if (Property.GetSetMethod() != null)
+                        {
+                            string Value = Property.GetValue(obj, null).ToString();
+                            AddInput(PropertyType, Property.Name, Value);
+                        }
                     }
                 }
             }
@@ -107,7 +117,15 @@ namespace Tools.HTML.Form.Builder
         /// <param name="ID">id of obj's property value</param>
         public void AddSelect (string Name, long ID)
         {
-            this.Form.Elements.Add(new Select(Name, ID, "required"));
+            if (ID == 0)
+            {
+                AddSelect(Name);
+            }
+
+            else
+            {
+                this.Form.Elements.Add(new Select(Name, ID, "required"));
+            }
         }
 
         /// <summary>
@@ -120,7 +138,24 @@ namespace Tools.HTML.Form.Builder
         {
             if (PropertyType.IsAssignableFrom(typeof(DateTime)))
             {
-                this.Form.Elements.Add(new Input("text", Name, Value, "required", "Date"));
+                string Class = "DateTime";
+                if (!string.IsNullOrEmpty(Value))
+                {                    
+                    var Date = DateTime.Parse(Value);
+
+                    if (Date == Date.Date)
+                    {
+                        Value = Date.ToShortDateString();
+                        Class = "Date";
+                    }
+                    else
+                    {
+                        Value = Date.ToShortDateString() + " " + Date.ToShortTimeString();
+                    }
+
+                        
+                }
+                this.Form.Elements.Add(new Input("text", Name, Value, "required", Class));
             }
             else if (PropertyType.IsAssignableFrom(typeof(Boolean)))
             {
@@ -130,6 +165,16 @@ namespace Tools.HTML.Form.Builder
             {
                 this.Form.Elements.Add(new Input("text", Name, Value, "required"));
             }
+        }
+
+        /// <summary>
+        /// adds a textarea element to the form with the specified value (defaults to empty string)
+        /// </summary>
+        /// <param name="Name">property name</param>
+        /// <param name="Value">property value (as string)</param>
+        public void AddTextArea (string Name, string Value = "")
+        {
+            this.Form.Elements.Add(new TextArea(Name, Value));
         }
 
         #endregion

@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.ViewModels.General;
+using Objects.ViewModels.General;
 
-namespace Tools.HTML.Form.Builder.Element
+namespace Admin.Models.Form.Builder.Element
 {
     /// <summary>
     /// select element
@@ -85,7 +85,7 @@ namespace Tools.HTML.Form.Builder.Element
             String.AppendFormat("<select name='{0}.ID' class='{1}'>\n", this.Name, string.Join(" ", this.Classes));
             String.Append("<option value=''>Select...</option>");
 
-            foreach (var Option in this.Options)
+            foreach (var Option in this.Options.OrderBy(x => x.DisplayName))
             {
                 if (Option.ID == this.ID)
                 {
